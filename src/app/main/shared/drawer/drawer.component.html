@@ -1,0 +1,87 @@
+
+<mat-drawer-container>
+  <mat-drawer
+    position="start"
+    class="shadow-sm left-drawer"
+    [opened]="isDrawerOpen"
+    #drawer
+    [mode]="dynamicMode"
+  >
+    <div class="vh-100 overflow-hidden vh-100 d-flex flex-column">
+      <div class="d-flex align-items-center p-3 pb-5 d-block ms-2 mt-2">
+        <img
+          src="../../../../assets/images/avatar.png"
+          class="logo"
+          alt="logo"
+        /><span class="ms-2 grey">Hi Admin!</span>
+      </div>
+      <div class="side-menu main flex-grow-1">
+        <div class="sidemenu-wrapper">
+          <div class="px-3">
+            <div class="items">
+              <div class="main-menu">
+                <a
+                  routerLink="/main/inventory"
+                  routerLinkActive="active"
+                  class="d-flex align-items-center"
+                >
+                  <mat-icon class="material-icons-outlined">home</mat-icon>
+                  <div class="ms-2">Dashboard</div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-3">
+            <div class="items">
+              <div class="main-menu">
+                <a
+                  routerLink="/main/products"
+                  routerLinkActive="active"
+                  class="d-flex align-items-center"
+                >
+                  <mat-icon class="material-icons-outlined"
+                    >inventory_2</mat-icon
+                  >
+                  <div class="ms-2">Products</div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-3">
+            <div class="items">
+              <div class="main-menu">
+                <a routerLinkActive="active" class="d-flex align-items-center">
+                  <mat-icon class="material-icons-outlined">settings</mat-icon>
+                  <div class="ms-2">Settings</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="side-menu">
+        <div class="sidemenu-wrapper border-top pt-2">
+          <div class="px-3">
+            <div class="items">
+              <div class="main-menu">
+                <a class="d-flex align-items-center mb-3"  routerLink="/">
+                  <mat-icon class="material-icons-outlined"
+                    >power_settings_new</mat-icon
+                  >
+                  <div class="ms-2">Logout</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="main">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

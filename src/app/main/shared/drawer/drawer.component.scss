@@ -1,0 +1,55 @@
+mat-drawer.left-drawer {
+  width: 280px;
+  background: #1f3f49;
+  // background: $theme-primary;
+
+  .side-menu.main {
+    height: calc(100vh - 225px);
+    overflow: overlay;
+  }
+}
+
+mat-drawer.right-drawer {
+  width: 425px;
+}
+
+mat-drawer-content {
+  background-color: #f5f5f4;
+  max-height: 100vh;
+  height: 100vh;
+  padding: 20px;
+}
+
+mat-drawer-container {
+  background-color: #f5f5f4;
+
+  @media screen and (min-width: 768px) {
+    min-height: 100vh;
+    height: 100%;
+  }
+}
+
+.main-menu a {
+  padding: 10px 15px;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
+
+  &.active:not(.bg-warning),
+  &:hover:not(.bg-warning) {
+    color: #fff;
+    background: #34b1aa;
+  }
+}
+
+.logo {
+  max-width: 130px;
+  max-height: 90px;
+  object-fit: cover;
+}
+
+.br-8 {
+  border-radius: 8px;
+}

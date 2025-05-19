@@ -1,0 +1,145 @@
+<div class="container py-3">
+  <div
+    class="d-flex flex-md-row flex-column pb-3"
+  >
+    <div class="main-heading">Dashboard</div>
+    </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ag-charts-angular [options]="options" > </ag-charts-angular>
+    </div>
+  </div>
+ 
+  <div class="row align-items-center my-3 py-3">
+    <div class="col-md-4 mb-2 mb-md-0">
+      <div class="search-input position-relative">
+        <button
+          mat-icon-button
+          class="d-flex"
+          class="search-icon"
+          type="submit"
+        >
+          <img
+            src="../../../assets/images/dashboard/search.png"
+            alt="search-img"
+          />
+        </button>
+        <input
+          type="text"
+          class="form-control custom search-padding"
+          placeholder="Search here..."
+          (keyup)="searchData($event.target)"
+          [(ngModel)]="searchBy"
+        />
+      </div>
+    </div>
+    <div class="col-md-4 arrow-menu">
+      <div class="position-relative">
+        <mat-select-trigger class="trigger-select">
+          <img
+            src="../../../assets/images/dashboard/arrow-menu.png"
+            alt="arrow-menu"
+          />
+        </mat-select-trigger>
+      </div>
+      <mat-select
+        class="form-control custom"
+        placeholder="Status"
+        (selectionChange)="filterByStatus($event.value)"
+        [(ngModel)]="status"
+      >
+        <mat-option [value]="status.value" *ngFor="let status of statusList">
+          {{ status.name }}
+        </mat-option>
+      </mat-select>
+    </div>
+    <div class="col-md-2 offset-md-2">
+      <div
+      class=""
+    >
+        <button
+          class="primary-filled-btn mb-md-0 mb-2"
+          routerLink="/main/products"
+        >
+          <img src="../../../assets/images/dashboard/add.png" class="me-2" />
+          Add Product
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="products-table" *ngIf="products">
+    <table mat-table matTableResponsive [dataSource]="products" class="w-100">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Product name</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="d-flex align-items-center">
+            <img [src]="element.image ?? ''" height="30px" class="me-2" />
+            {{ element.name }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.price ?? "-" | currency:'USD'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Quantity Availale</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.quantity ?? "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Inventory Status</th>
+        <td mat-cell *matCellDef="let element">
+          {{
+            element.status == 0
+              ? "Out of Stock"
+              : element.status == 1
+              ? "In Stock"
+              : "-"
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="d-flex align-items-center">
+            <button
+              mat-icon-button
+              (click)="deleteProduct(element.id)"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon class="material-icons-outlined primary-color"
+                >delete</mat-icon
+              >
+            </button>
+            <button mat-icon-button>
+              <mat-icon class="material-icons-outlined primary-color"
+                >edit</mat-icon
+              >
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="onRowClick(row)"
+        class="cursor-pointer"
+      ></tr>
+    </table>
+  </div>
+</div>

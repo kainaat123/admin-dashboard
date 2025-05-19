@@ -1,0 +1,134 @@
+<div class="container py-3">
+  <div class="d-flex border-bottom-primary-light pb-3 mb-4">
+    <div class="main-heading">Product Details</div>
+  </div>
+
+  <div class="d-flex align-items-start">
+    <mat-tab-group>
+      <mat-tab label="Product Details">
+        <div class="row my-2">
+          <div class="col-md-9 mb-lg-0 mt-2">
+            <div class="shadow-box">
+              <form [formGroup]="productForm">
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                      <label for="name" class="mb-2">Product Name</label>
+                      <input
+                        type="text"
+                        class="form-control custom"
+                        placeholder="Name"
+                        formControlName="name"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                      <label for="price" class="mb-2">Price</label>
+                      <input
+                        type="text"
+                        class="form-control custom"
+                        placeholder="$500"
+                        formControlName="price"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                      <label for="qty" class="mb-2">Quantity</label>
+                      <input
+                        type="number"
+                        class="form-control custom"
+                        placeholder="3"
+                        formControlName="quantity"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                      <label for="qty" class="mb-2">Inventory Status</label>
+                      <div class="arrow-menu">
+                        <div class="position-relative">
+                          <mat-select-trigger class="trigger-select">
+                            <img
+                              src="../../../assets/images/dashboard/arrow-menu.png"
+                              alt="arrow-menu"
+                            />
+                          </mat-select-trigger>
+                        </div>
+                        <mat-select
+                          class="form-control custom"
+                          placeholder="Status"
+                          formControlName="status"
+                          [(ngModel)]="status"
+                          name="status"
+                        >
+                          <mat-option
+                            [value]="status.value"
+                            *ngFor="let status of statusList"
+                          >
+                            {{ status.name }}
+                          </mat-option>
+                        </mat-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div class="d-flex justify-content-end my-2">
+                <button class="primary-filled-btn" (click)="addProduct()" *ngIf="!productId">
+                  Save
+                </button>
+                <button class="primary-filled-btn" (click)="updateProduct()" *ngIf="productId">
+                  Update
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="shadow-box">
+            <div class="mb-3">
+              <div class="grey text-center f-semibold mb-3 f-16">
+                Upload Image
+              </div>
+              <div class="d-flex justify-content-center mb-3">
+                <div class="position-relative">
+                  <img
+                    [src]="
+                      imgUrl && imgUrl !== ''
+                        ? imgUrl
+                        : ' ../../../../assets/images/products/logo.png'
+                    "
+                    alt="image"
+                    class="avatar"
+                  />
+                  <div
+                    class="upload-img cursor-pointer"
+                    (keyup.enter)="file.click()"
+                    tabindex="0"
+                    (click)="file.click()"
+                  >
+                    <img
+                      alt="search-img"
+                      src="
+                        ../../../../assets/images/products/camera.png
+                      "
+                    />
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    #file
+                    (change)="uploadFile($event)"
+                  />
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

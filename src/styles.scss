@@ -1,1 +1,122 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: "f-bold";
+  src: url("./assets/fonts/Montserrat-Bold.ttf");
+}
+
+@font-face {
+  font-family: "f-semibold";
+  src: url("./assets/fonts/Montserrat-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: "f-regular";
+  src: url("./assets/fonts/Montserrat-Regular.ttf");
+}
+
+@font-face {
+  font-family: "f-medium";
+  src: url("./assets/fonts/Montserrat-Medium.ttf");
+}
+
+html,
+body {
+  height: 100%;
+  font-size: 15px !important;
+  font-family: f-medium, sans-serif !important;
+  color: #000 !important;
+
+  @media screen and (max-width: 768px) {
+    font-size: 13px;
+  }
+}
+
+.main-heading {
+  font-size: 25px;
+  font-family: "f-semibold";
+}
+
+.sub-heading {
+  font-size: 18px;
+  font-family: "f-semibold";
+}
+
+.f-bold {
+  font-family: "f-bold";
+}
+
+.f-semibold {
+  font-family: "f-semibold";
+}
+
+.f-medium {
+  font-family: "f-medium";
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: whitesmoke;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: LightGray;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: Silver;
+}
+.form-control.custom {
+  height: 45px;
+  border-radius: 5px;
+  border: transparent;
+  background-color: rgba(73, 95, 57, 0.05);
+  display: flex;
+  align-items: center;
+}
+
+.form-control.custom:focus {
+  box-shadow: none;
+  background-color: #f6f7f5;
+  border: 0.5px solid #34b1aa;
+  opacity: 100%;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.primary-filled-btn {
+  color: #fff;
+  border: none;
+  background-color: #34b1aa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 156px;
+  height: 48px;
+  border-radius: 5px;
+  box-shadow: 0px 3px 6px #00000029;
+  font-size: 14px;
+}
+
+.grey {
+  color: #9b8f88;
+}
+
+.primary-color{
+  color: #34b1aa;
+}
+.shadow-box {
+  background: #9b8f8809 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  padding: 25px;
+  min-height: 400px;
+}

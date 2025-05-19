@@ -1,10 +1,25 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
+const routes: Routes = [
 
+  {
+    path: '',
+    loadChildren: () =>
+      import('../app/main/main.module').then((m) => m.MainModule),
+  },
+
+  {
+    path: '**',
+    redirectTo: '/authentication',
+    pathMatch: 'full',
+  },
+];
+const routerOptions: ExtraOptions = {
+  useHash: true,
+};
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, routerOptions)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -1,0 +1,72 @@
+<div id="signin" class="theme-bg d-flex h-100">
+  <div class="container-fluid">
+    <div class="row h-100">
+      <div class="col-lg-8">
+        <div class="d-flex flex-column h-100">
+
+          <div class="d-flex flex-column justify-content-center flex-grow-1">
+            <div class="row">
+              <div
+                class="col-xxl-4 offset-xxl-4 col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-10 offset-1"
+              >
+                <div class="main-heading">Sign In</div>
+                <div class="grey mb-xxl-4 mb-3 mt-3">
+                  Enter your email address & password to continue..
+                </div>
+                <form [formGroup]="loginForm">
+                  <div class="form-group mb-3">
+                    <input
+                      type="email"
+                      class="form-control custom"
+                      placeholder="Email"
+                      formControlName="email"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <div class="position-relative">
+                      <input
+                        type="password"
+                        class="form-control custom pe-5"
+                        placeholder="Password"
+                        formControlName="password"
+                      />
+                    </div>
+                  </div>
+                  <div class="text-center mt-5">
+                    <button class="auth-primary-btn" (click)="login()">Sign In</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-lg-4 d-none d-lg-block h-100 no-gutters section-right bg-login text-white"
+      >
+        <div
+          class="d-flex flex-column align-items-center justify-content-center h-100 py-4"
+        >
+          <div class="d-flex flex-column align-items-center  mt-lg-5 mt-2">
+            <div class="sub-heading mb-1 text-white">Welcome Back</div>
+            <div class="">We're happy to have you here!</div>
+          </div>
+          <div class="flex-grow-1 d-flex align-items-center">
+            <img
+              src="../../../../assets/images/Authentication/login_bg.png"
+              class="graphics-img img-fluid"
+              alt="ecommerce"
+            />
+          </div>
+          <div class="d-flex align-items-end terms-conditions">
+            <a class="text-white me-2 bold" routerLink="">
+              Terms & Conditions
+            </a>
+            and
+            <a class="text-white ms-2 bold" routerLink=""> Privacy Policy </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
