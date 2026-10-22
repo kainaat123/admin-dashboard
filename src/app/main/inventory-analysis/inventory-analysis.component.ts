@@ -1,8 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { Product } from '../products-management/products.constant';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { AgChartOptions } from 'ag-charts-community';
+import {
+  BehaviorSubject,
+  Subject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  merge,
+  startWith,
+  switchMap,
+} from 'rxjs';
+import {
+  Product,
+  STATUS_OPTIONS,
+} from '../products-management/products.constant';
 import { SharedService } from '../shared/drawer/services/shared.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CLOSING } from 'ws';
 
 @Component({
   selector: 'app-inventory-analysis',
@@ -10,91 +25,88 @@ import { CLOSING } from 'ws';
   styleUrls: ['./inventory-analysis.component.scss'],
 })
 export class InventoryAnalysisComponent implements OnInit {
-  constructor(
-    private sharedService: SharedService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.options = {
-      data: [{ name: 'pen', price: 78 }],
-      series: [
-        {
-          xKey: 'name',
-          yKey: 'price',
-        },
-      ],
-    };
-  }
+  private readonly sharedService = inject(SharedService);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
-  status: any = '';
-  searchBy: any;
-  timer: any;
-  params: any = {};
-  public options: any;
+  readonly statusList = [{ name: 'All', value: '' as const }, ...STATUS_OPTIONS];
+  readonly displayedColumns = ['id', 'name', 'quantity', 'price', 'status', 'action'];
 
-  statusList: any[] = [
-    {
-      name: 'In Stock',
-      value: 1,
-    },
-    {
-      name: 'Out Of Stock',
-      value: 0,
-    },
-  ];
-  graphData: any[] = [];
-  displayedColumns: string[] = [
-    'id',
-    'name',
-    'quantity',
-    'price',
-    'status',
-    'action',
-  ];
-  ngOnInit() {
-    this.getAllProducts();
-  }
-
+  searchBy = '';
+  status: number | '' = '';
   products: Product[] = [];
+  loading = true;
+  options: AgChartOptions = this.buildChart([]);
 
-  getAllProducts() {
-    this.sharedService
-      .getAllProducts(this.params)
-      .subscribe((data: Product[]) => {
-        this.products = data;
-        const filteredProducts = this.products.forEach((prod: Product) => {
-          const obj = {
-            name: prod.name,
-            price: +prod.price,
-          };
-          this.graphData.push(obj);
-          this.options.data = this.graphData;
-          //console.log(this.options)
-        });
+  private readonly search$ = new Subject<string>();
+  private readonly status$ = new BehaviorSubject<number | ''>('');
+  private readonly refresh$ = new Subject<void>();
+
+  ngOnInit(): void {
+    const search = this.search$.pipe(
+      map((term) => term.trim()),
+      debounceTime(300),
+      distinctUntilChanged(),
+      startWith('')
+    );
+
+    // One stream for search, status and refreshes. switchMap cancels
+    // a request that's still running when a newer one starts.
+    combineLatest([search, this.status$])
+      .pipe(
+        switchMap(([term, status]) =>
+          merge(this.refresh$, [undefined]).pipe(
+            switchMap(() => this.sharedService.getAllProducts({ search: term, status }))
+          )
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: (products) => {
+          this.products = products;
+          this.options = this.buildChart(products);
+          this.loading = false;
+        },
+        error: () => (this.loading = false),
       });
   }
 
-  deleteProduct(id: any) {
-    this.sharedService.delete(id).subscribe((res) => {
-      this.getAllProducts();
-    });
+  searchData(term: string): void {
+    this.search$.next(term);
   }
 
-  onRowClick(row: Product) {
-    this.router.navigate([`/main/products/${row.id}`], {
-      queryParams: { id: row.id },
-    });
-  }
-  searchData(search: any) {
-    this.params.search = search.value ? search.value : '';
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.getAllProducts();
-    }, 1000);
+  filterByStatus(status: number | ''): void {
+    this.status$.next(status);
   }
 
-  filterByStatus(event: any) {
-    this.params.status = event;
-    this.getAllProducts();
+  deleteProduct(id: number, event: Event): void {
+    event.stopPropagation();
+    this.sharedService
+      .delete(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.refresh$.next());
+  }
+
+  editProduct(row: Product, event?: Event): void {
+    event?.stopPropagation();
+    this.router.navigate(['/main/products', row.id]);
+  }
+
+  trackById(_: number, product: Product): number {
+    return product.id;
+  }
+
+  /** A new options object each time, so ag-charts redraws. */
+  private buildChart(products: Product[]): AgChartOptions {
+    return {
+      title: { text: 'Price by product' },
+      data: products.map((p) => ({ name: p.name, price: Number(p.price) })),
+      series: [{ type: 'column', xKey: 'name', yKey: 'price', yName: 'Price (USD)', fill: '#35b4ad', strokeWidth: 0 }],
+      axes: [
+        { type: 'category', position: 'bottom' },
+        { type: 'number', position: 'left', label: { formatter: ({ value }) => `$${Number(value).toLocaleString()}` } },
+      ],
+      legend: { enabled: false },
+    };
   }
 }

@@ -14,6 +14,7 @@ const routes: Routes = [
     path: 'main',
     component: MainComponent,
     children: [
+      { path: '', redirectTo: 'inventory', pathMatch: 'full' },
       {
         path: 'inventory',
         loadChildren: () =>

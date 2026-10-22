@@ -1,73 +1,66 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Product } from 'src/app/main/products-management/products.constant';
 import { environment } from 'src/environments/environment';
 
+export interface ProductFilters {
+  search?: string;
+  status?: number | '';
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
+  private readonly apiUrl = `${environment.apiServer}/products`;
+
   constructor(private httpClient: HttpClient) {}
 
-  apiUrl = environment.apiServer;
-
-  create(product: any): Observable<Product> {
+  create(product: Omit<Product, 'id'>): Observable<Product> {
     return this.httpClient
-      .post<Product>(
-        this.apiUrl + '/products/',
-        JSON.stringify(product),
-        this.httpOptions
-      )
+      .post<Product>(this.apiUrl, product)
       .pipe(catchError(this.errorHandler));
   }
 
-  getById(id: string): Observable<Product> {
+  getById(id: string | number): Observable<Product> {
     return this.httpClient
-      .get<Product>(this.apiUrl + '/products/' + id)
+      .get<Product>(`${this.apiUrl}/${id}`)
       .pipe(catchError(this.errorHandler));
   }
 
-  getAllProducts(params?: any): Observable<Product[]> {
-    return this.httpClient
-      .get<Product[]>(this.apiUrl + '/products/', { params: params })
-      .pipe(catchError(this.errorHandler));
-  }
-
-  update(id: string, product: any): Observable<Product> {
-    return this.httpClient
-      .put<Product>(
-        this.apiUrl + '/products/' + id,
-        JSON.stringify(product),
-        this.httpOptions
-      )
-      .pipe(catchError(this.errorHandler));
-  }
-
-  delete(id: string) {
-    return this.httpClient
-      .delete<Product>(this.apiUrl + '/products/' + id, this.httpOptions)
-      .pipe(catchError(this.errorHandler));
-  }
-  errorHandler(error: {
-    error: { message: string };
-    status: any;
-    message: any;
-  }) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // Get client-side error
-      errorMessage = error.error.message;
-    } else {
-      // Get server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+  /** json-server filters: `name_like` for search, `status` for exact status. */
+  getAllProducts(filters: ProductFilters = {}): Observable<Product[]> {
+    let params = new HttpParams();
+    if (filters.search?.trim()) {
+      params = params.set('name_like', filters.search.trim());
     }
-    console.log(errorMessage);
-    return throwError(errorMessage);
+    if (filters.status !== undefined && filters.status !== '') {
+      params = params.set('status', String(filters.status));
+    }
+    return this.httpClient
+      .get<Product[]>(this.apiUrl, { params })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  update(id: string | number, product: Omit<Product, 'id'>): Observable<Product> {
+    return this.httpClient
+      .put<Product>(`${this.apiUrl}/${id}`, product)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  delete(id: string | number): Observable<unknown> {
+    return this.httpClient
+      .delete(`${this.apiUrl}/${id}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  private errorHandler(error: HttpErrorResponse) {
+    const message =
+      error.error instanceof ErrorEvent
+        ? error.error.message
+        : `Error Code: ${error.status}\nMessage: ${error.message}`;
+    console.error(message);
+    return throwError(() => new Error(message));
   }
 }

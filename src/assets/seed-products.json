@@ -1,0 +1,34 @@
+[
+  {
+    "name": "headphones",
+    "status": 0,
+    "price": 57.0,
+    "quantity": 4,
+    "image": "assets/images/seed/product-2.jpg",
+    "id": 2
+  },
+  {
+    "name": "blue pen",
+    "status": 1,
+    "price": 56.0,
+    "quantity": 4,
+    "image": "assets/images/seed/product-3.jpg",
+    "id": 3
+  },
+  {
+    "name": "iphone",
+    "status": 1,
+    "price": 1200.0,
+    "quantity": 4,
+    "image": "assets/images/seed/product-4.jpg",
+    "id": 4
+  },
+  {
+    "name": "black pen",
+    "status": 1,
+    "price": 59.0,
+    "quantity": 5,
+    "image": "assets/images/seed/product-5.jpg",
+    "id": 5
+  }
+]
