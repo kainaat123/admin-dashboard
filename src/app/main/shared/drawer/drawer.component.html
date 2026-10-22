@@ -22,6 +22,7 @@
               <div class="main-menu">
                 <a
                   routerLink="/main/inventory"
+                  (click)="closeOnMobile()"
                   routerLinkActive="active"
                   class="d-flex align-items-center"
                 >
@@ -37,6 +38,7 @@
               <div class="main-menu">
                 <a
                   routerLink="/main/products"
+                  (click)="closeOnMobile()"
                   routerLinkActive="active"
                   class="d-flex align-items-center"
                 >
@@ -80,6 +82,17 @@
     </div>
   </mat-drawer>
   <mat-drawer-content>
+    <div class="mobile-bar" *ngIf="isMobile">
+      <button
+        type="button"
+        class="menu-btn"
+        (click)="drawer.toggle()"
+        aria-label="Open menu"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="mobile-title">Admin Dashboard</span>
+    </div>
     <div class="main">
       <router-outlet></router-outlet>
     </div>
